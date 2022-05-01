@@ -36,18 +36,8 @@ jobs:
       working-directory: ./frontend
       run: npm run build
       
-    - name: Install backend dependencies
-      working-directory: ./backend
-      run: npm install
-
-    - name: Run the backend tests
-      working-directory: ./backend
-      run: npm test
-
-    - name: Build backend
-      working-directory: ./backend
-      run: npm run build
-    - name: Deploy
+    - name: Deploy frontend
+      working-directory: ./frontend
       run: |
         git config --global user.name githubActions
         git config --global user.email gnn5314@aut.ac.nz
