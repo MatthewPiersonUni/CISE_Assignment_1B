@@ -15,5 +15,5 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "cise-assignment2"
           heroku_email: "matthewpierson01@gmail.com"
-          appdir: "backend"
-          procfile: "web:node backend/app.js"
+          appdir: "frontend"
+          procfile: "web:node frontend/app.js"
