@@ -16,4 +16,4 @@ jobs:
           heroku_app_name: "cise-assignment2"
           heroku_email: "matthewpierson01@gmail.com"
           appdir: "backend"
-          procfile: "web:node backend/server.js"
+          procfile: "web:node backend/app.js"
