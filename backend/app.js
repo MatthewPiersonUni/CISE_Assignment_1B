@@ -21,6 +21,13 @@ async function databaseFind(res, collection, row, query) {
     })
 }
 
+async function databaseFindAll(res, collection) {
+    client.connect()
+    .then( async () => {
+        res.send({results: await client.db("CISE_TEST").collection(collection).find({}).toArray()})
+    })
+}
+
 async function databaseInsert(res, collection, data) {
     client.connect()
     .then( async () => {
@@ -29,6 +36,30 @@ async function databaseInsert(res, collection, data) {
             res.send({result: 0})
           })
     })
+}
+
+async function databaseRemove(collection, id) {
+    client.connect()
+    .then( async () => {
+        await client.db("CISE_TEST").collection(collection).deleteOne({id: id}, function(err) {
+            if (err) return 1;
+            return 0
+          })
+    })
+}
+
+async function moveItemFromAnalystQueueToSPEED(res, id, data) {
+    await databaseRemove("analysisQueue", id)
+    databaseInsert(res, "SPEED", data)
+}
+
+async function moveItemFromModerationQueueToAnalystQueue(res, id, data) {
+    await databaseRemove("moderationQueue", id)
+    databaseInsert(res, "analysisQueue", data)
+}
+
+async function getAllArticles(res) {
+    databaseFindAll(res, "SPEED")
 }
 
 app.get('/search', (req, res) => {
@@ -40,20 +71,24 @@ app.get('/search', (req, res) => {
     databaseFind(res, collection, row, searchPhrase)
 })
 
+app.get('/getAllArticles', (req, res) => {
+    getAllArticles(res)
+})
+
 app.get('/insert', (req, res) => {
     var collection = req.query.collection
     var data
     switch (collection) {
-        case 'test':
+        case 'SPEED':
             data = {
                 title: req.query.title,
                 doi: req.query.doi,
-                publicationYear: req.query.publicationYear,
-                volume: req.query.volume,
-                number: req.query.number,
+                publicationYear: Number(req.query.publicationYear),
+                volume: Number(req.query.volume),
+                number: Number(req.query.number),
                 journalName: req.query.journalName,
                 summary: req.query.summary,
-                practiceType: req.query.practiceType,
+                practiceType: Number(req.query.practiceType),
                 authors: req.query.authors,
             }
             break;
