@@ -1,5 +1,6 @@
 var express = require('express');
 const { MongoClient, ServerApiVersion } = require('mongodb');
+var mongodb = require('mongodb');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
@@ -38,23 +39,29 @@ async function databaseInsert(res, collection, data) {
     })
 }
 
-async function databaseRemove(collection, id) {
+async function databaseRemove(res = null, collection, id) {
     client.connect()
     .then( async () => {
-        await client.db("CISE_TEST").collection(collection).deleteOne({id: id}, function(err) {
-            if (err) return 1;
-            return 0
+        await client.db("CISE_TEST").collection(collection).deleteOne({_id: new mongodb.ObjectID(String(id))}, function(err) {
+            if (err) {
+                if (res) {
+                    res.send({result: 1});
+                }
+            }
+            if (res) {
+                res.send({result: 0});
+            }
           })
     })
 }
 
 async function moveItemFromAnalystQueueToSPEED(res, id, data) {
-    await databaseRemove("analysisQueue", id)
+    await databaseRemove(null, "analysisQueue", id)
     databaseInsert(res, "SPEED", data)
 }
 
 async function moveItemFromModerationQueueToAnalystQueue(res, id, data) {
-    await databaseRemove("moderationQueue", id)
+    await databaseRemove(null, "moderationQueue", id)
     databaseInsert(res, "analysisQueue", data)
 }
 
@@ -73,6 +80,12 @@ app.get('/search', (req, res) => {
 
 app.get('/getAllArticles', (req, res) => {
     getAllArticles(res)
+})
+
+app.get('/removeArticle', (req, res) => {
+    var collection = req.query.collection
+    var id = req.query.id
+    databaseRemove(res, collection, id)
 })
 
 app.get('/insert', (req, res) => {
