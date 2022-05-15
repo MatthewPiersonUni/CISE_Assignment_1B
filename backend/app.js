@@ -15,26 +15,43 @@ app.use(cookieParser());
 const uri = "mongodb+srv://cise:cise@mernlab.j4rip.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-async function databaseFind(res, collection, row, query) {
+async function databaseFind(res = null, collection, row, query) {
     client.connect()
     .then( async () => {
-        res.send({results: await client.db("CISE_TEST").collection(collection).find({ [row]: query }).toArray()})
+        if (res) {
+            res.send({results: await client.db("CISE_TEST").collection(collection).find({ [row]: query }).toArray()})
+        } else {
+            return await client.db("CISE_TEST").collection(collection).find({ [row]: query }).toArray()
+        }
     })
 }
 
-async function databaseFindAll(res, collection) {
+async function databaseFindAll(res = null, collection) {
     client.connect()
     .then( async () => {
-        res.send({results: await client.db("CISE_TEST").collection(collection).find({}).toArray()})
+        if (res) {
+            res.send({results: await client.db("CISE_TEST").collection(collection).find({}).toArray()})
+        } else {
+            return await client.db("CISE_TEST").collection(collection).find({}).toArray()
+        }
     })
 }
 
-async function databaseInsert(res, collection, data) {
+async function databaseInsert(res = null, collection, data) {
     client.connect()
     .then( async () => {
         await client.db("CISE_TEST").collection(collection).insertOne(data, function(err) {
-            if (err) res.send({result: 1});
-            res.send({result: 0})
+            if (err) {
+                if (res) {
+                    res.send({result: 1});
+                } else {
+                    return 1}
+            }
+            if (res) {
+                res.send({result: 0});
+            } else {
+                return 1
+            }
           })
     })
 }
@@ -46,43 +63,50 @@ async function databaseRemove(res = null, collection, id) {
             if (err) {
                 if (res) {
                     res.send({result: 1});
-                }
+                } else {
+                    return 1}
             }
             if (res) {
                 res.send({result: 0});
+            } else {
+                return 1
             }
           })
     })
 }
 
-async function moveItemFromAnalystQueueToSPEED(res, id, data) {
+async function moveItemFromAnalystQueueToSPEED(res = null, id, data) {
     await databaseRemove(null, "analysisQueue", id)
     databaseInsert(res, "SPEED", data)
 }
 
-async function moveItemFromModerationQueueToAnalystQueue(res, id, data) {
+async function moveItemFromModerationQueueToAnalystQueue(res = null, id, data) {
     await databaseRemove(null, "moderationQueue", id)
     databaseInsert(res, "analysisQueue", data)
 }
 
-async function moveItemFromModerationQueueToRejectedArticles(res, id, data) {
+async function moveItemFromModerationQueueToRejectedArticles(res = null, id, data) {
     await databaseRemove(null, "moderationQueue", id)
     databaseInsert(res, "rejectedArticles", data)
 }
 
-function getAllArticles(res) {
-    databaseFindAll(res, "SPEED")
+function getAllArticles(res = null) {
+    if (res) {
+        databaseFindAll(res, "SPEED")
+    } else {
+        return databaseFindAll(res, "SPEED")
+    }
 }
 
-function getAllModerationQueue(res) {
+function getAllModerationQueue(res = null) {
     databaseFindAll(res, "moderationQueue")
 }
 
-function getAllAnalysisQueue(res) {
+function getAllAnalysisQueue(res = null) {
     databaseFindAll(res, "analysisQueue")
 }
 
-function getAllRejectedArticles(res) {
+function getAllRejectedArticles(res = null) {
     databaseFindAll(res, "rejectedArticles")
 }
 
@@ -154,4 +178,7 @@ app.get('/insert', (req, res) => {
     databaseInsert(res, collection, data)
 })
 
-module.exports = app;
+module.exports = {
+    app: app,
+    databaseFindAll: databaseFindAll,
+};
