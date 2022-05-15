@@ -65,8 +65,25 @@ async function moveItemFromModerationQueueToAnalystQueue(res, id, data) {
     databaseInsert(res, "analysisQueue", data)
 }
 
-async function getAllArticles(res) {
+async function moveItemFromModerationQueueToRejectedArticles(res, id, data) {
+    await databaseRemove(null, "moderationQueue", id)
+    databaseInsert(res, "rejectedArticles", data)
+}
+
+function getAllArticles(res) {
     databaseFindAll(res, "SPEED")
+}
+
+function getAllModerationQueue(res) {
+    databaseFindAll(res, "moderationQueue")
+}
+
+function getAllAnalysisQueue(res) {
+    databaseFindAll(res, "analysisQueue")
+}
+
+function getAllRejectedArticles(res) {
+    databaseFindAll(res, "rejectedArticles")
 }
 
 app.get('/search', (req, res) => {
