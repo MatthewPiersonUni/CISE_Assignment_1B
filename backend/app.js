@@ -1,4 +1,5 @@
 var express = require('express');
+const path = require('path');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 var mongodb = require('mongodb');
 var cookieParser = require('cookie-parser');
@@ -110,6 +111,12 @@ function getAllRejectedArticles(res = null) {
     databaseFindAll(res, "rejectedArticles")
 }
 
+app.use(express.static(path.join(__dirname, '../frontend/build')))
+
+app.post('/', function(req, res) {
+    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'))
+})
+
 app.get('/search', (req, res) => {
     // Get search term from 
     var collection = req.query.collection
@@ -177,6 +184,8 @@ app.get('/insert', (req, res) => {
     }
     databaseInsert(res, collection, data)
 })
+
+app.listen(process.env.PORT || 3000)
 
 module.exports = {
     app: app,

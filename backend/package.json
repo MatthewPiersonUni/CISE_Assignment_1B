@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start:production": "cd ../frontend && npm install && npm run build && cd ../backend && npm run start:prod",
+    "start:prod": "node app",
+    "start": "node app",
     "test": "jest"
   },
   "dependencies": {
