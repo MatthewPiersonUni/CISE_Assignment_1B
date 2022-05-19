@@ -63,4 +63,4 @@ jobs:
       env:
         HEROKU_APP_NAME: "cise-assignment2"
     - name: Push to Heroku
-      run: git push heroku master
+      run: git push heroku main
