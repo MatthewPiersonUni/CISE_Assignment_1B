@@ -35,17 +35,20 @@ jobs:
     - name: Build frontend
       working-directory: ./frontend
       run: npm run build
-      
-    - name: Deploy frontend
-      working-directory: ./frontend
-      run: |
-        git config --global user.name githubActions
-        git config --global user.email gnn5314@aut.ac.nz
-        git remote set-url origin https://${github_token}@github.com/${repository}
-        npm run deploy
-      env:
-        user_name: 'github-actions[bot]'
-        user_email: 'github-actions[bot]@users.noreply.github.com'
-        github_token: ${{ secrets.ACTIONS_DEPLOY_ACCESS_TOKEN }}
-        repository: ${{ github.repository }}
 
+    - name: Install backend dependencies
+      working-directory: ./backend
+      run: npm install
+
+    - name: Run the backend tests
+      working-directory: ./backend
+      run: npm test
+      
+    - name: Deploy app to Heroku
+      uses: akhileshns/heroku-deploy@v3.12.12
+      with:
+        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        heroku_app_name: "cise-assignment2"
+        heroku_email: "matthewpierson01@gmail.com"
+        appdir: "backend"
+        procfile: "web:node backend/app.js"
