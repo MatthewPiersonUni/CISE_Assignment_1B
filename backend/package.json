@@ -6,7 +6,7 @@
     "start:production": "rm -R ./build && cd ../frontend && npm install && npm run build && cp -R ./build ../backend/build && cd ../backend && npm run start:prod",
     "start:prod": "node app",
     "start": "node app",
-    "build": "rm -R ./build && cd ../frontend && npm install && npm run build && cp -R ./build ../backend/build && cd ../backend",
+    "build": "cd ../frontend && npm install && npm run build && cp -R ./build ../backend/build && cd ../backend",
     "test": "jest --forceExit"
   },
   "dependencies": {
