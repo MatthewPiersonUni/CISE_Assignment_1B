@@ -60,6 +60,7 @@ jobs:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         HEROKU_EMAIL: "matthewpierson01@gmail.com"
     - name: Add Heroku remote
+      working-directory: backend
       run: heroku git:remote --app "cise-assignment2"
     - name: Push to Heroku
       run: git push heroku main --force
