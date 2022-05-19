@@ -41,9 +41,7 @@ jobs:
     - name: Run the backend tests
       working-directory: ./backend
       run: npm test
-    - name: Build frontend
-      working-directory: ./backend
-      run: npm run build
+      
     - name: Heroku login credentials
       run: |
         cat > ~/.netrc <<EOF
@@ -57,9 +55,11 @@ jobs:
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         HEROKU_EMAIL: "matthewpierson01@gmail.com"
+        
     - name: Add Heroku remote
       working-directory: backend
       run: heroku git:remote --app "cise-assignment2"
+      
     - name: Setup Heroku
       run: |
         heroku buildpacks:clear
