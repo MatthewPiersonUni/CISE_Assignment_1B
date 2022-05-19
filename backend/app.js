@@ -46,12 +46,13 @@ async function databaseInsert(res = null, collection, data) {
                 if (res) {
                     res.send({result: 1});
                 } else {
-                    return 1}
+                    return 1
+                }
             }
             if (res) {
                 res.send({result: 0});
             } else {
-                return 1
+                return 0
             }
           })
     })
@@ -138,9 +139,22 @@ app.get('/removeArticle', (req, res) => {
 
 app.get('/insert', (req, res) => {
     var collection = req.query.collection
-    var data
+    var data = {};
     switch (collection) {
         case 'SPEED':
+            data = {
+                title: req.query.title,
+                doi: req.query.doi,
+                publicationYear: Number(req.query.publicationYear),
+                volume: Number(req.query.volume),
+                number: Number(req.query.number),
+                journalName: req.query.journalName,
+                summary: req.query.summary,
+                practiceType: Number(req.query.practiceType),
+                authors: req.query.authors,
+            }
+            break;
+        case 'test':
             data = {
                 title: req.query.title,
                 doi: req.query.doi,
@@ -181,6 +195,14 @@ app.get('/insert', (req, res) => {
         default:
             res.send({status: 1})
             return;
+    }
+    var values = []
+    Object.entries(data).forEach(([key, value]) => {
+        values.push(value)
+    });
+    if (values.includes(undefined)) {
+        res.send({status: 1})
+        return;
     }
     databaseInsert(res, collection, data)
 })
