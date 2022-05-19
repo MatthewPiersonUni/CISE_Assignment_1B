@@ -1,0 +1,8 @@
+{
+  "name": "cise_assignment_1b",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "cd backend && npm start",
+    "heroku-postbuild": "cd frontend && npm install && npm run build && cp -R build ../backend/"
+  }
+}
