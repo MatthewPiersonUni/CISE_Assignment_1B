@@ -59,7 +59,7 @@ jobs:
       working-directory: backend
       run: heroku git:remote --app "cise-assignment2"
     - name: Change buildpack
-      run: heroku buildpacks:set https://github.com/timanovsky/subdir-heroku-buildpack
+      run: heroku buildpacks:clear & heroku buildpacks:set https://github.com/timanovsky/subdir-heroku-buildpack
     - name: Add NodeJS buildpack
       run: heroku buildpacks:add heroku/nodejs
     - name: Set PROJECT_PATH
