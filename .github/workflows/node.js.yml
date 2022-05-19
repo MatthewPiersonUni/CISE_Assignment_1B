@@ -41,7 +41,9 @@ jobs:
     - name: Run the backend tests
       working-directory: ./backend
       run: npm test
-      
+    - name: Build frontend
+      working-directory: ./backend
+      run: npm run build
     - name: Heroku login credentials
       run: |
         cat > ~/.netrc <<EOF
@@ -64,16 +66,4 @@ jobs:
         heroku buildpacks:set https://github.com/timanovsky/subdir-heroku-buildpack
         heroku buildpacks:add heroku/nodejs
         heroku config:set PROJECT_PATH=backend
-        git push heroku main --force
-    - name: Build frontend
-      working-directory: ./frontend
-      run: npm run build
-    - name: Add frontend to Heroku
-      working-directory: backend
-      run: |
-        cp -R ../frontend/build ./build
-        git config --global user.email "matthewpierson01@gmail.com"
-        git config --global user.name "Matthew Pierson"
-        git add .
-        git commit -m "Add frontend build folder"
         git push heroku main --force
