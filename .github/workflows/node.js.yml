@@ -72,6 +72,8 @@ jobs:
       working-directory: backend
       run: |
         cp -R ../frontend/build ./build
+        git config --global user.email "matthewpierson01@gmail.com"
+        git config --global user.name "Matthew Pierson"
         git add .
         git commit -m "Add frontend build folder"
         git push heroku main --force
