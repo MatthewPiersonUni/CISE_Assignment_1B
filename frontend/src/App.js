@@ -11,7 +11,7 @@ function App() {
     <>
       <div className="appWrapper">
         <Routes>
-          <Route path="/" element={< Home />}/>
+          <Route exact path="/" element={< Home />}/>
           <Route path="/add" element={< AddNewArticle />} />
           <Route path="/edit" element={< EditArticle />} />
         </Routes>
