@@ -61,7 +61,7 @@ async function databaseInsert(res = null, collection, data) {
 async function databaseRemove(res = null, collection, id) {
     client.connect()
     .then( async () => {
-        await client.db("CISE_TEST").collection(collection).deleteOne({_id: new mongodb.ObjectID(String(id))}, function(err) {
+        await client.db("CISE_TEST").collection(collection).deleteOne({_id: new mongodb.ObjectId(String(id))}, function(err) {
             if (err) {
                 if (res) {
                     res.send({result: 1});
@@ -80,6 +80,11 @@ async function databaseRemove(res = null, collection, id) {
 async function moveItemFromAnalystQueueToSPEED(res = null, id, data) {
     await databaseRemove(null, "analysisQueue", id)
     databaseInsert(res, "SPEED", data)
+}
+
+async function moveItemFromAnalystQueueToRejectedArticles(res = null, id, data) {
+    await databaseRemove(null, "analysisQueue", id)
+    databaseInsert(res, "rejectedArticles", data)
 }
 
 async function moveItemFromModerationQueueToAnalystQueue(res = null, id, data) {
@@ -115,7 +120,7 @@ function getAllRejectedArticles(res = null) {
 app.use(express.static(path.join(__dirname, 'build')))
 
 app.get('/search', (req, res) => {
-    // Get search term from 
+    // Get search term from the request
     var collection = req.query.collection
     var row = req.query.row
     var searchPhrase = req.query.search
@@ -139,6 +144,27 @@ app.get('/removeArticle', (req, res) => {
     var collection = req.query.collection
     var id = req.query.id
     databaseRemove(res, collection, id)
+})
+
+app.get('/moveArticleAnalystToReject', (req, res) => {
+    var data = JSON.parse(req.query.data)
+    var id = data._id
+    delete data._id
+    moveItemFromAnalystQueueToRejectedArticles(res, id, data)
+})
+
+app.get('/moveArticleModeratorToReject', (req, res) => {
+    var data = JSON.parse(req.query.data)
+    var id = data._id
+    delete data._id
+    moveItemFromModerationQueueToRejectedArticles(res, id, data)
+})
+
+app.get('/moveArticleModeratorToAnalyst', (req, res) => {
+    var data = JSON.parse(req.query.data)
+    var id = data._id
+    delete data._id
+    moveItemFromModerationQueueToAnalystQueue(res, id, data)
 })
 
 app.get('/insert', (req, res) => {
