@@ -114,10 +114,6 @@ function getAllRejectedArticles(res = null) {
 
 app.use(express.static(path.join(__dirname, 'build')))
 
-app.post('/', function(req, res) {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'))
-})
-
 app.get('/search', (req, res) => {
     // Get search term from 
     var collection = req.query.collection
@@ -129,6 +125,14 @@ app.get('/search', (req, res) => {
 
 app.get('/getAllArticles', (req, res) => {
     getAllArticles(res)
+})
+
+app.get('/getModerationQueue', (req, res) => {
+    getAllModerationQueue(res)
+})
+
+app.get('/getAnalystQueue', (req, res) => {
+    getAllAnalysisQueue(res)
 })
 
 app.get('/removeArticle', (req, res) => {
@@ -205,6 +209,10 @@ app.get('/insert', (req, res) => {
         return;
     }
     databaseInsert(res, collection, data)
+})
+
+app.get('*', function(req, res) {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'))
 })
 
 app.listen(process.env.PORT || 3000)

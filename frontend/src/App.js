@@ -1,24 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+// Route and Routes
+import {Route, Routes} from 'react-router-dom';
+
+// Pages
+import ModeratorQueue from './components/ModeratorQueue';
+import AnalystQueue from './components/AnalystQueue';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className="appWrapper">
+        <Routes>
+          <Route path="/moderator" element={< ModeratorQueue />} />
+          <Route path="/analyst" element={< AnalystQueue />} />
+        </Routes>
+      </div>
+
+    </>
   );
 }
 
