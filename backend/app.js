@@ -6,6 +6,13 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var app = express();
+var cors = require('cors');
+
+app.use(cors({
+    origin: '*',
+    methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
+}));
+
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -114,9 +121,6 @@ function getAllRejectedArticles(res = null) {
 
 app.use(express.static(path.join(__dirname, 'build')))
 
-app.post('/', function(req, res) {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'))
-})
 
 app.get('/search', (req, res) => {
     // Get search term from 
@@ -127,7 +131,7 @@ app.get('/search', (req, res) => {
     databaseFind(res, collection, row, searchPhrase)
 })
 
-app.get('/getAllArticles', (req, res) => {
+app.get('/getAllArticles', cors(), (req, res) => {
     getAllArticles(res)
 })
 
@@ -205,6 +209,11 @@ app.get('/insert', (req, res) => {
         return;
     }
     databaseInsert(res, collection, data)
+})
+
+
+app.post('/', function(req, res) {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'))
 })
 
 app.listen(process.env.PORT || 3000)
