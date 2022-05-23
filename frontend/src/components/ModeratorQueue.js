@@ -7,6 +7,7 @@ export default function ModeratorQueue() {
     const [refresh, setRefresh] = useState(false);
 
     const rejectArticle = (data) => {
+        data['rejectName'] ="Moderator Name"
         Axios.get(`http://localhost:3000/moveArticleModeratorToReject`, {params: {data}})
         .then(res => {
             setRefresh(!refresh)
@@ -30,13 +31,24 @@ export default function ModeratorQueue() {
     return (
         <>
             ModeratorQueue Test
-            {moderatorQueue.map((element) => {
-                return <div>
-                    {element._id}
-                    <button onClick={() => rejectArticle(element)}>Reject Article</button>
-                    <button onClick={() => approveArticle(element)}>Approve and move to Analyst Queue</button>
-                </div>
-            })}
+            <table>
+                <tr>
+                    <th>DOI</th>
+                    <th>Submitter Name</th>
+                    <th>Submitter Email</th>
+                    <th>Submission Date</th>
+                </tr>
+                {moderatorQueue.map((element) => {
+                    return <tr>
+                        <td>{element.doi}</td>
+                        <td>{element.submitterName}</td>
+                        <td>{element.submitterEmail}</td>
+                        <td>{element.submitDate}</td>
+                        <button onClick={() => rejectArticle(element)}>Reject Article</button>
+                        <button onClick={() => approveArticle(element)}>Approve and move to Analyst Queue</button>
+                    </tr>
+                })}
+            </table>
         </>
     )
 }
