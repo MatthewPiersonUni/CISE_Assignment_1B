@@ -15,6 +15,8 @@ export default function ModeratorQueue() {
     }
 
     const approveArticle = (data) => {
+        data['moderatorName'] ="Moderator Name"
+        data['moderatorEmail'] ="moderator@email.com"
         Axios.get(`http://localhost:3000/moveArticleModeratorToAnalyst`, {params: {data}})
         .then(res => {
             setRefresh(!refresh)
@@ -32,22 +34,26 @@ export default function ModeratorQueue() {
         <>
             ModeratorQueue Test
             <table>
-                <tr>
-                    <th>DOI</th>
-                    <th>Submitter Name</th>
-                    <th>Submitter Email</th>
-                    <th>Submission Date</th>
-                </tr>
-                {moderatorQueue.map((element) => {
-                    return <tr>
-                        <td>{element.doi}</td>
-                        <td>{element.submitterName}</td>
-                        <td>{element.submitterEmail}</td>
-                        <td>{element.submitDate}</td>
-                        <button onClick={() => rejectArticle(element)}>Reject Article</button>
-                        <button onClick={() => approveArticle(element)}>Approve and move to Analyst Queue</button>
+                <thead>
+                    <tr>
+                        <th>DOI</th>
+                        <th>Submitter Name</th>
+                        <th>Submitter Email</th>
+                        <th>Submission Date</th>
                     </tr>
-                })}
+                </thead>
+                <tbody>
+                    {moderatorQueue.map((element) => {
+                        return <tr>
+                            <td>{element.doi}</td>
+                            <td>{element.submitterName}</td>
+                            <td>{element.submitterEmail}</td>
+                            <td>{element.submitDate}</td>
+                            <button onClick={() => rejectArticle(element)}>Reject Article</button>
+                            <button onClick={() => approveArticle(element)}>Approve and move to Analyst Queue</button>
+                        </tr>
+                    })}
+                </tbody>
             </table>
         </>
     )

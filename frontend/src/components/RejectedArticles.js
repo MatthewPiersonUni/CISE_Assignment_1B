@@ -16,16 +16,20 @@ export default function RejectArticles() {
         <>
             RejecetedArticles Test
             <table>
-                <tr>
-                    <th>DOI</th>
-                    <th>Rejecter Name</th>
-                </tr>
-                {rejectedArticles.map((element) => {
-                    return <tr>
-                        <td>{element.doi}</td>
-                        <td>{element.rejectName}</td>
+                <thead>
+                    <tr>
+                        <th>DOI</th>
+                        <th>Rejecter Name</th>
                     </tr>
-                })}
+                </thead>
+                <tbody>
+                    {rejectedArticles.map((element) => {
+                        return <tr>
+                            <td>{element.doi}</td>
+                            <td>{element.rejectName}</td>
+                        </tr>
+                    })}
+                </tbody>
             </table>
         </>
     )
