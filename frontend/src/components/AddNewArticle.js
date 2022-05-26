@@ -36,6 +36,7 @@ export default function AddNewArticle() {
   // =====> ARTICLE AUTHOR <=====
   const [articleAuthor, dispatchArticleAuthor] = useReducer (
     (state, action) => {
+
       if (action.type === "ARTICLE_INPUT") {
         return {value: action.val, isValid: action.val.length > 3}
       }
