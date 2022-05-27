@@ -7,6 +7,7 @@ import { GlobalContext } from '../context/GlobalState';
 
 import articleStyle from  '../styles/AddNewArticle.module.css';
 import formStyle from '../styles/ArticleFormField.module.css';
+import buttonStyle from '../styles/Button.module.css';
 import { GiCancel } from "react-icons/gi";
 
 export default function AddNewArticle() {
@@ -30,7 +31,7 @@ export default function AddNewArticle() {
   )
 
   const onArticleTitleChange = function (e) {
-    dispatchArticleTitle( {type: "ARTICLE_INPUT", val: e.target.value} )
+    dispatchArticleTitle({type: "ARTICLE_INPUT", val: e.target.value})
   }
 
   // =====> ARTICLE AUTHOR <=====
@@ -237,6 +238,15 @@ export default function AddNewArticle() {
         </>
       )
     };
+
+    // =====> BUTTON <=====
+    const Button = (props) => {
+      return (
+          <button type={props.type} className={`${buttonStyle.button} ${props.className}`} onClick={props.onClick} >
+              {props.children}
+          </button>
+      )
+  };
   
   return (
     <>
@@ -247,7 +257,7 @@ export default function AddNewArticle() {
           <ArticleFormField 
             type="text"
             value={articleTitle.value}
-            placeholder="enter article title"
+            placeholder="Enter article title"
             onChange={onArticleTitleChange}
             label="Title"
             className={`${articleTitle.isValid === false ?  articleStyle.invalid : ``}`}
@@ -257,7 +267,7 @@ export default function AddNewArticle() {
           <ArticleFormField 
             type="text"
             value={articleAuthor.value}
-            placeholder="enter article Author"
+            placeholder="Enter article Author"
             onChange={onArticleAuthorChange}
             label="Author"
             className={`${articleAuthor.isValid === false ?  articleStyle.invalid : ``}`} 
@@ -267,7 +277,7 @@ export default function AddNewArticle() {
           <ArticleFormField 
             type="text"
             value={articleName.value}
-            placeholder="enter article Name"
+            placeholder="Enter article Name"
             onChange={onArticleNameChange}
             label="Name"
             className={`${articleName.isValid === false ?  articleStyle.invalid : ``}`} 
@@ -278,7 +288,7 @@ export default function AddNewArticle() {
           <ArticleFormField 
             type="text"
             value={articleYearOfPublication.value}
-            placeholder="enter article Year of Publication"
+            placeholder="Enter article Year of Publication"
             onChange={onArticleYearOfPublicationChange}
             label="Year of Publication"
             className={`${articleYearOfPublication.isValid === false ?  articleStyle.invalid : ``}`} 
@@ -289,7 +299,7 @@ export default function AddNewArticle() {
           <ArticleFormField 
             type="text"
             value={articleVolume.value}
-            placeholder="enter article Volume"
+            placeholder="Enter article Volume"
             onChange={onArticleVolumeChange}
             label="Volume"
             className={`${articleVolume.isValid === false ?  articleStyle.invalid : ``}`} 
@@ -299,7 +309,7 @@ export default function AddNewArticle() {
           <ArticleFormField 
             type="text"
             value={articleNumber.value}
-            placeholder="enter Article Number"
+            placeholder="Enter Article Number"
             onChange={onArticleNumbereChange}
             label="Number"
             className={`${articleNumber.isValid === false ?  articleStyle.invalid : ``}`} 
@@ -309,7 +319,7 @@ export default function AddNewArticle() {
           <ArticleFormField 
             type="text"
             value={articlePages.value}
-            placeholder="enter article Pages"
+            placeholder="Enter article Pages"
             onChange={onArticlePagesChange}
             label="Pages"
             className={`${articlePages.isValid === false ?  articleStyle.invalid : ``}`} 
@@ -320,16 +330,16 @@ export default function AddNewArticle() {
           <ArticleFormField 
             type="text"
             value={articleDOI.value}
-            placeholder="enter article DOI"
+            placeholder="Enter article DOI"
             onChange={onArticleDOIChange}
             label="DOI"
             className={`${articleDOI.isValid === false ?  articleStyle.invalid : ``}`} 
           />
 
           <div className={articleStyle.buttons}>
-            <button type='submit' className={`${isArticleValid ? articleStyle.submit : articleStyle.disabled}`}>
+            <Button type='submit' className={`${isArticleValid ? articleStyle.submit : articleStyle.disabled}`}>
               Submit
-            </button>
+            </Button>
             
             <Link to="/" className={articleStyle.link}>
               <GiCancel /> Cancel

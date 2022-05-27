@@ -51,7 +51,7 @@ export const GlobalProvider = (({children}) => {
 
     return(
         <GlobalContext.Provider value={{
-            books: state.books,
+            articles: state.articles,
             removeArticle,
             addArticle,
             editArticle,
