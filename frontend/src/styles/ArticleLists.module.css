@@ -1,0 +1,101 @@
+.tableContent {
+    border-collapse: collapse;
+    margin: 25px 9;
+    font-size: 0.9em;
+    min-width: 500px;
+    margin: 0 auto;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+
+    -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.tableContent thead tr {
+    background-color: #009879;
+    color: #fff;
+    text-align: left;
+    font-weight: bold;
+}
+
+.tableContent thead tr th {
+    padding: 12px 15px;
+}
+
+.tableContent thead tr .title {
+    width: 400px;
+}
+
+.tableContent thead tr .author {
+    width: 200px;
+}
+
+.tableContent thead tr .name {
+    width: 200px;
+}
+
+.tableContent thead tr .yop {
+    width: 200px;
+}
+
+.tableContent thead tr .volume {
+    width: 200px;
+}
+
+.tableContent thead tr .number {
+    width: 200px;
+}
+
+.tableContent thead tr .pages {
+    width: 200px;
+}
+
+.tableContent thead tr .doi {
+    width: 200px;
+}
+
+.tableContent tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.tableContent tbody tr:nth-child(even) {
+    background: #f3f3f3;
+}
+
+.tableContent tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+.tableContent tbody tr td {
+    padding: 12px 15px;
+}
+
+.tableContent tbody tr td:last-child {
+    width: 196px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.tableContent tbody tr td:last-child #link {
+    color: #fff;
+    padding: 8px 10px;
+    background: #f8f8f8;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.tableContent tbody tr td:last-child .button {
+    color: white;
+    margin-left: 10px;
+    background: #f74141;
+    padding: 8px 10px;
+}
+
+.tableContent tbody tr td:last-child .button :first-child {
+    margin-right: 5px;
+    line-height: 50px;
+}
