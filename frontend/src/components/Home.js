@@ -1,9 +1,31 @@
-import React from 'react'
+import {React, useEffect, useState }  from 'react'
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { BiPlus } from 'react-icons/bi';
+import Axios from "axios";
 
 export default function Home() {
+
+  const [articleData, setArticleData] = useState([]);
+  
+  useEffect(() => {
+    // Update the document title using the browser API
+    articles();
+  });
+
+  // Getting Articles
+
+const articles = function () {
+  console.log("Function");
+  Axios.get("http://localhost:3000/getAllArticles")
+      .then(response => {
+                    setArticleData(response.data.results);
+                    // console.log(articleData);
+      })
+  ;
+
+}
+
   return (
     <>
       <HomeStyle>
@@ -34,6 +56,24 @@ export default function Home() {
               <th className="actions">Actions</th>
             </tr>
           </thead>
+          <tbody>
+            {
+               articleData.map(x => <tr><td> {x.title} </td>
+                                    <td> {x.authors} </td>
+                                    <td> {x.journalName} </td>
+                                    <td> {x.publicationYear} </td>
+                                    <td> {x.volume} </td>
+                                    <td> {x.number} </td>
+                                    <td> {x.practiceType} </td>
+                                    <td> {x.doi} </td>
+                                    <td> 
+                                        <button style={{ color: "white", background: "green", border: "none" }}>Edit</button> 
+                                        &nbsp;
+                                        <button style={{ color: "white", background: "red", border: "none"  }}>DELETE</button> 
+                                    </td>
+                          </tr>)
+            }
+          </tbody>
         </table>
       </HomeStyle>
     </>
