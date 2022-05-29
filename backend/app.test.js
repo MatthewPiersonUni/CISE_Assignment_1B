@@ -18,8 +18,12 @@ test('Test getting test dummy data from MongoDB, should return a non-empty array
 });
 
 test('Test that backend will not insert NULL data into the database', done => {
+    data = {
+        collection: "test",
+        title: "NULLTEST"
+    }
     request(app.app)
-    .get("/insert?collection=test&title=NULLTEST")
+    .get("/insert?data=" + JSON.stringify(data))
     .then(response => {
         expect(response.request.res.text).toBe("{\"status\":1}");
         done();
