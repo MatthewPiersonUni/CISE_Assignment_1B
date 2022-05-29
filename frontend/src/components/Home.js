@@ -17,7 +17,7 @@ export default function Home() {
 
 const articles = function () {
   console.log("Function");
-  Axios.get("http://localhost:3000/getAllArticles")
+  Axios.get("https://cise-assignment2.herokuapp.com/getAllArticles")
       .then(response => {
                     setArticleData(response.data.results);
                     // console.log(articleData);
