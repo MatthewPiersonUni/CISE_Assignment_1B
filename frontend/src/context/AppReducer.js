@@ -7,8 +7,9 @@ export const AppReducer = (state, action) => {
             action.payload.forEach((app) => {
                 data.unshift(app);
             })
+
             return {
-                books: data
+                article: data
             }
         
         case 'REMOVE_ARTICLE':
