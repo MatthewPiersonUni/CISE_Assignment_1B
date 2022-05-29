@@ -61,7 +61,7 @@ async function databaseInsert(res = null, collection, data) {
 async function databaseRemove(res = null, collection, id) {
     client.connect()
     .then( async () => {
-        await client.db("CISE_TEST").collection(collection).deleteOne({_id: new mongodb.ObjectID(String(id))}, function(err) {
+        await client.db("CISE_TEST").collection(collection).deleteOne({_id: new mongodb.ObjectId(String(id))}, function(err) {
             if (err) {
                 if (res) {
                     res.send({result: 1});
@@ -80,6 +80,11 @@ async function databaseRemove(res = null, collection, id) {
 async function moveItemFromAnalystQueueToSPEED(res = null, id, data) {
     await databaseRemove(null, "analysisQueue", id)
     databaseInsert(res, "SPEED", data)
+}
+
+async function moveItemFromAnalystQueueToRejectedArticles(res = null, id, data) {
+    await databaseRemove(null, "analysisQueue", id)
+    databaseInsert(res, "rejectedArticles", data)
 }
 
 async function moveItemFromModerationQueueToAnalystQueue(res = null, id, data) {
@@ -114,15 +119,12 @@ function getAllRejectedArticles(res = null) {
 
 app.use(express.static(path.join(__dirname, 'build')))
 
-app.post('/', function(req, res) {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'))
-})
-
 app.get('/search', (req, res) => {
-    // Get search term from 
-    var collection = req.query.collection
-    var row = req.query.row
-    var searchPhrase = req.query.search
+    var data = JSON.parse(req.query.data)
+    // Get search term from the request
+    var collection = data.collection
+    var row = data.row
+    var searchPhrase = data.search
     // Call databaseFind(query) to get found results back
     databaseFind(res, collection, row, searchPhrase)
 })
@@ -131,65 +133,87 @@ app.get('/getAllArticles', (req, res) => {
     getAllArticles(res)
 })
 
+app.get('/getModerationQueue', (req, res) => {
+    getAllModerationQueue(res)
+})
+
+app.get('/getAnalystQueue', (req, res) => {
+    getAllAnalysisQueue(res)
+})
+
+app.get('/getRejectedArticles', (req, res) => {
+    getAllRejectedArticles(res)
+})
+
 app.get('/removeArticle', (req, res) => {
-    var collection = req.query.collection
-    var id = req.query.id
+    var data = JSON.parse(req.query.data)
+    var collection = data.collection
+    var id = data.id
     databaseRemove(res, collection, id)
 })
 
-app.get('/insert', (req, res) => {
-    var collection = req.query.collection
-    var data = {};
+app.get('/moveArticleAnalystToReject', (req, res) => {
+    var data = JSON.parse(req.query.data)
+    var id = data._id
+    delete data._id
+    moveItemFromAnalystQueueToRejectedArticles(res, id, data)
+})
+
+app.get('/moveArticleModeratorToReject', (req, res) => {
+    var data = JSON.parse(req.query.data)
+    var id = data._id
+    delete data._id
+    moveItemFromModerationQueueToRejectedArticles(res, id, data)
+})
+
+app.get('/moveArticleModeratorToAnalyst', (req, res) => {
+    var data = JSON.parse(req.query.data)
+    var id = data._id
+    delete data._id
+    moveItemFromModerationQueueToAnalystQueue(res, id, data)
+})
+
+app.get('/insert', async (req, res) => {
+    var data = JSON.parse(req.query.data)
+    var collection = data.collection
     switch (collection) {
         case 'SPEED':
-            data = {
-                title: req.query.title,
-                doi: req.query.doi,
-                publicationYear: Number(req.query.publicationYear),
-                volume: Number(req.query.volume),
-                number: Number(req.query.number),
-                journalName: req.query.journalName,
-                summary: req.query.summary,
-                practiceType: Number(req.query.practiceType),
-                authors: req.query.authors,
-            }
-            break;
         case 'test':
             data = {
-                title: req.query.title,
-                doi: req.query.doi,
-                publicationYear: Number(req.query.publicationYear),
-                volume: Number(req.query.volume),
-                number: Number(req.query.number),
-                journalName: req.query.journalName,
-                summary: req.query.summary,
-                practiceType: Number(req.query.practiceType),
-                authors: req.query.authors,
+                title: data.title,
+                doi: data.doi,
+                publicationYear: Number(data.publicationYear),
+                volume: Number(data.volume),
+                number: Number(data.number),
+                journalName: data.journalName,
+                summary: data.summary,
+                practiceType: Number(data.practiceType),
+                authors: data.authors,
             }
             break;
         case 'rejectedArticles':
             data = {
-                doi: req.query.doi,
-                rejectName: req.query.rejectName,
+                doi: data.doi,
+                rejectName: data.rejectName,
                 rejectTime: new Date(),
             }
             break;
         case 'moderationQueue':
             data = {
-                doi: req.query.doi,
+                doi: data.doi,
                 submitDate: new Date(),
-                submitterName: req.query.submitterName,
-                submitterEmail: req.query.submitterEmail,
+                submitterName: data.submitterName,
+                submitterEmail: data.submitterEmail,
             }
             break;
         case 'analysisQueue':
             data = {
-                doi: req.query.doi,
+                doi: data.doi,
                 submitDate: new Date(),
-                submitterName: req.query.submitterName,
-                submitterEmail: req.query.submitterEmail,
-                moderatorName: req.query.moderatorName,
-                moderatorEmail: req.query.moderatorEmail,
+                submitterName: data.submitterName,
+                submitterEmail: data.submitterEmail,
+                moderatorName: data.moderatorName,
+                moderatorEmail: data.moderatorEmail,
             }
             break;
         default:
@@ -205,6 +229,10 @@ app.get('/insert', (req, res) => {
         return;
     }
     databaseInsert(res, collection, data)
+})
+
+app.get('*', function(req, res) {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'))
 })
 
 app.listen(process.env.PORT || 3000)
