@@ -1,0 +1,31 @@
+.form {
+    width: 400px;
+    margin: 0 auto;
+    color: teal;
+}
+
+.form .buttons {
+    display: flex;
+    font-size: 15px;
+    margin-top: 31px;
+}
+
+.form .buttons .edit_article {
+    font-size: 15px;
+    margin-right: 4px;
+    padding: 6px 12px 0px 10px;
+    background: darkgoldenrod;
+}
+
+.form .buttons .link {
+    background: crimson;
+    border-radius: 5px;
+    padding: 10px 12px 10px 9px;
+    text-decoration: none;
+    color: #FFF;
+    display: flex;
+}
+
+.form .buttons .link :first-child {
+    margin-right: 4px;
+}
