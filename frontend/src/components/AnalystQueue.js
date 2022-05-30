@@ -7,14 +7,14 @@ export default function AnalystQueue() {
     const [refresh, setRefresh] = useState(false);
 
     const rejectArticle = (data) => {
-        Axios.get(`https://cise-assignment2.herokuapp.com/moveArticleAnalystToReject`, {params: {data}})
+        Axios.get(`/moveArticleAnalystToReject`, {params: {data}})
         .then(res => {
             setRefresh(!refresh)
         })
     }
 
     useEffect(() => {    
-        Axios.get(`https://cise-assignment2.herokuapp.com/getAnalystQueue`)
+        Axios.get(`/getAnalystQueue`)
         .then(res => {
             setAnalystQueue(res.data.results)
         })

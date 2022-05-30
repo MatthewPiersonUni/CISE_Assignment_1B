@@ -205,7 +205,7 @@ export default function AddNewArticle() {
       articleDOI: articleDOI.value,
     };
 
-    Axios.post("https://cise-assignment2.herokuapp.com/insert", { /* DON'T for get to implement insert method in the backend */
+    Axios.post("/insert", { /* DON'T for get to implement insert method in the backend */
       articleTitle: articleTitle.value,
       articleAuthor: articleAuthor.value,
       articleName: articleName.value,

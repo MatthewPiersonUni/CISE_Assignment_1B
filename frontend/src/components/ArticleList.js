@@ -16,7 +16,7 @@ const ArticleList = () => {
     const removeHandler = (id) => {
         removeArticle(id);
 
-        Axios.delete(`https://cise-assignment2.herokuapp.com/delete/${id}`);
+        Axios.delete(`/delete/${id}`);
     };
 
     return (

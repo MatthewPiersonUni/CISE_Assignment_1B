@@ -6,7 +6,7 @@ export default function RejectArticles() {
     const [rejectedArticles, setRejectedArticles] = useState([]);
 
     useEffect(() => {    
-        Axios.get(`https://cise-assignment2.herokuapp.com/getRejectedArticles`)
+        Axios.get(`/getRejectedArticles`)
         .then(res => {
             setRejectedArticles(res.data.results)
         })
