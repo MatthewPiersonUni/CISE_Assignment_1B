@@ -40,7 +40,7 @@ const EditArticle = (props) =>  {
     const {articleTitle, articleAuthor, articleName, articleYearOfPublication, articleVolume,
               articleNumber, articlePages, articleDOI } = selectedArticle
     
-    Axios.put("https://cise-assignment2.herokuapp.com/update", {
+    Axios.put("/update", {
       id: id,
       articleTitle: articleTitle,
       articleAuthor: articleAuthor,
