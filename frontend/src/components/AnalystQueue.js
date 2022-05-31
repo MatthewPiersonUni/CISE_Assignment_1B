@@ -9,11 +9,16 @@ export default function AnalystQueue() {
     const [refresh, setRefresh] = useState(false);
     const navigate = useNavigate();
 
+    const navigateTo = (path) =>
+        navigate({
+            pathname: path
+        });
+
     const navigateToAddArticle = (DOI) =>
-    navigate({
-      pathname: '/add',
-      search: '?DOI=' + DOI,
-    });
+        navigate({
+            pathname: '/add',
+            search: '?DOI=' + DOI,
+        });
 
     const rejectArticle = (data) => {
         Axios.get(`/moveArticleAnalystToReject`, {params: {data}})
@@ -39,6 +44,9 @@ export default function AnalystQueue() {
 
     return (
         <>
+            <button style={{width:"200px", height:"50px"}} onClick={() => navigateTo("/")}>Home</button>
+            <button style={{width:"200px", height:"50px"}} onClick={() => navigateTo("/userSubmit")}>Submit Article for Moderation</button>
+            <button style={{width:"200px", height:"50px"}} onClick={() => navigateTo("/moderator")}>Moderator Queue</button>
             <h1>SERL Analyst Queue</h1>
             <table className={AnalystQueueStyle["tableContent"]}>
                 <thead>

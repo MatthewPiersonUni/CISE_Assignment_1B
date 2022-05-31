@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 import ModeratorQueueStyle from "../styles/ModeratorQueue.module.css"
 
@@ -6,7 +7,13 @@ export default function ModeratorQueue() {
 
     const [moderatorQueue, setModeratorQueue] = useState([]);
     const [refresh, setRefresh] = useState(false);
+    const navigate = useNavigate();
 
+    const navigateTo = (path) =>
+        navigate({
+            pathname: path
+        });
+    
     const rejectArticle = (data) => {
         data['rejectName'] = "Moderator Name"
         Axios.get(`/moveArticleModeratorToReject`, {params: {data}})
@@ -33,6 +40,9 @@ export default function ModeratorQueue() {
 
     return (
         <>
+            <button style={{width:"200px", height:"50px"}} onClick={() => navigateTo("/")}>Home</button>
+            <button style={{width:"200px", height:"50px"}} onClick={() => navigateTo("/userSubmit")}>Submit Article for Moderation</button>
+            <button style={{width:"200px", height:"50px"}} onClick={() => navigateTo("/analyst")}>Analyst Queue</button>
             <h1>Moderator Queue</h1>
             <table className={ModeratorQueueStyle["tableContent"]}>
                 <thead>

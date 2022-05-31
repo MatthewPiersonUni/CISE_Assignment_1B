@@ -17,7 +17,7 @@ export default function AddNewArticle() {
   const { addArticle } = useContext(GlobalContext);
   const articleHistory = createBrowserHistory();
   const [isArticleValid, setIsArticleValid] = useState(false); /* Used in onSubmit function */
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   // =====> ARTTILCE TITLE <=====
   const [articleTitle, dispatchArticleTitle] = useReducer (
@@ -243,7 +243,7 @@ export default function AddNewArticle() {
       articlePages: articlePages.value,
       articleSummary: articleSummary.value,
       articleSEType: articleSEType.value,
-      articleDOI: searchParams.get("DOI") != undefined ? searchParams.get("DOI") : articleDOI.value,
+      articleDOI: searchParams.get("DOI") !== undefined ? searchParams.get("DOI") : articleDOI.value,
     };
 
     var data = { 
@@ -256,7 +256,7 @@ export default function AddNewArticle() {
       pages: articlePages.value,
       summary: articleSummary.value,
       practiceType: articleSEType.value,
-      doi: searchParams.get("DOI") != undefined ? searchParams.get("DOI") : articleDOI.value,
+      doi: searchParams.get("DOI") !== undefined ? searchParams.get("DOI") : articleDOI.value,
       collection: "SPEED",
     }
 
@@ -395,11 +395,11 @@ export default function AddNewArticle() {
             <label>DOI</label>
             <input 
               type="text"
-              value={searchParams.get("DOI") != undefined ? searchParams.get("DOI") : articleDOI.value}
+              value={searchParams.get("DOI") !== undefined ? searchParams.get("DOI") : articleDOI.value}
               placeholder="Enter article DOI"
               onChange={onArticleDOIChange}
               className={`${articleDOI.isValid === false ?  articleStyle.invalid : ``}`}
-              readOnly={searchParams.get("DOI") != undefined ? true : false}      
+              readOnly={searchParams.get("DOI") !== undefined ? true : false}      
             />
           </div>
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 import '../styles/UserSubmit.module.css';
 
@@ -7,6 +8,12 @@ export default function UserSubmit() {
     const [submitData, setSubmitData] = useState([]);
     const [rejectedDOIs, setRejectedDOIs] = useState({});
     const [refresh, setRefresh] = useState(false);
+    const navigate = useNavigate();
+
+    const navigateTo = (path) =>
+        navigate({
+            pathname: path
+        });
 
     const sendToModerationQueue = (data) => {
         data = {
@@ -55,6 +62,9 @@ export default function UserSubmit() {
 
     return (
         <>
+            <button style={{width:"200px", height:"50px"}} onClick={() => navigateTo("/")}>Home</button>
+            <button style={{width:"200px", height:"50px"}} onClick={() => navigateTo("/moderator")}>Moderator Queue</button>
+            <button style={{width:"200px", height:"50px"}} onClick={() => navigateTo("/analyst")}>Analyst Queue</button>
             <h1>Submit Article for Moderation</h1>
             <form onSubmit={handleSubmit}>
                 <label for='submitterName'>Name</label>
