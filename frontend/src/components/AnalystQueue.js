@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Axios from 'axios';
+import AnalystQueueStyle from "../styles/AnalystQueue.module.css"
 
 export default function AnalystQueue() {
 
@@ -22,16 +23,18 @@ export default function AnalystQueue() {
 
     return (
         <>
-            AnalystQueue Test
-            <table>
+            <h1>SERL Analyst Queue</h1>
+            <table className={AnalystQueueStyle["tableContent"]}>
                 <thead>
                     <tr>
-                        <th>DOI</th>
-                        <th>Submitter Name</th>
-                        <th>Submitter Email</th>
-                        <th>Submission Date</th>
-                        <th>Moderator Name</th>
-                        <th>Moderator Email</th>
+                        <th className={AnalystQueueStyle.doi}>DOI</th>
+                        <th className={AnalystQueueStyle.name}>Submitter Name</th>
+                        <th className={AnalystQueueStyle.name}>Submitter Email</th>
+                        <th className={AnalystQueueStyle.name}>Submission Date</th>
+                        <th className={AnalystQueueStyle.name}>Moderator Name</th>
+                        <th className={AnalystQueueStyle.name}>Moderator Email</th>
+                        <th className={AnalystQueueStyle.name}>Reject</th>
+                        <th className={AnalystQueueStyle.name}>Approve</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,11 +46,8 @@ export default function AnalystQueue() {
                             <td>{element.submitDate}</td>
                             <td>{element.moderatorName}</td>
                             <td>{element.moderatorEmail}</td>
-                            <button onClick={() => rejectArticle(element)}>Reject Article</button>
-                            <button onClick={() => {
-                                setRefresh(!refresh)
-                                console.log("Add functionality here to approve and go to fill out page")
-                                }}>Approve and fill out (reword)</button>
+                            <td><button onClick={() => rejectArticle(element)}>Reject Article</button></td>
+                            <td><button onClick={() => {setRefresh(!refresh);console.log("Add functionality here to approve and go to fill out page");}}>Approve and fill out (reword)</button></td>
                         </tr>
                     })}
                 </tbody>

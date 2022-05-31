@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Axios from 'axios';
+import '../styles/UserSubmit.module.css';
 
 export default function UserSubmit() {
 
@@ -25,11 +26,11 @@ export default function UserSubmit() {
     const handleSubmit = (event) => {
         var fail = 0
         rejectedDOIs.forEach(element => {
-            if (element.doi.localeCompare(submitData[2]) == 0) {
+            if (element.doi.localeCompare(submitData[2]) === 0) {
                 fail = 1
             }
         });
-        if (fail == 1) {
+        if (fail === 1) {
             alert("Error: DOI has already been rejected previously, please submit a different article!")
             setRefresh(!refresh)
             window.location.reload(false);
@@ -54,7 +55,7 @@ export default function UserSubmit() {
 
     return (
         <>
-            UserSubmit Test
+            <h1>Submit Article for Moderation</h1>
             <form onSubmit={handleSubmit}>
                 <label for='submitterName'>Name</label>
                 <input type='text' id='submitterName' name='submitterName' value={submitData[0]} onChange={(e) => {handleChange(e, 0)}}/>

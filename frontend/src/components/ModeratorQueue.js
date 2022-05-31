@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Axios from 'axios';
+import ModeratorQueueStyle from "../styles/ModeratorQueue.module.css"
 
 export default function ModeratorQueue() {
 
@@ -32,14 +33,16 @@ export default function ModeratorQueue() {
 
     return (
         <>
-            ModeratorQueue Test
-            <table>
+            <h1>Moderator Queue</h1>
+            <table className={ModeratorQueueStyle["tableContent"]}>
                 <thead>
                     <tr>
-                        <th>DOI</th>
-                        <th>Submitter Name</th>
-                        <th>Submitter Email</th>
-                        <th>Submission Date</th>
+                        <th className={ModeratorQueueStyle.doi}>DOI</th>
+                        <th className={ModeratorQueueStyle.name}>Submitter Name</th>
+                        <th className={ModeratorQueueStyle.name}>Submitter Email</th>
+                        <th className={ModeratorQueueStyle.name}>Submission Date</th>
+                        <th className={ModeratorQueueStyle.name}>Reject</th>
+                        <th className={ModeratorQueueStyle.name}>Approve</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,8 +52,8 @@ export default function ModeratorQueue() {
                             <td>{element.submitterName}</td>
                             <td>{element.submitterEmail}</td>
                             <td>{element.submitDate}</td>
-                            <button onClick={() => rejectArticle(element)}>Reject Article</button>
-                            <button onClick={() => approveArticle(element)}>Approve and move to Analyst Queue</button>
+                            <td><button onClick={() => rejectArticle(element)}>Reject Article</button></td>
+                            <td><button onClick={() => approveArticle(element)}>Approve and move to Analyst Queue</button></td>
                         </tr>
                     })}
                 </tbody>
