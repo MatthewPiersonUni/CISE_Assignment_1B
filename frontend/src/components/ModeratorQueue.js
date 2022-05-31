@@ -8,7 +8,7 @@ export default function ModeratorQueue() {
     const [refresh, setRefresh] = useState(false);
 
     const rejectArticle = (data) => {
-        data['rejectName'] ="Moderator Name"
+        data['rejectName'] = "Moderator Name"
         Axios.get(`/moveArticleModeratorToReject`, {params: {data}})
         .then(res => {
             setRefresh(!refresh)
@@ -16,8 +16,8 @@ export default function ModeratorQueue() {
     }
 
     const approveArticle = (data) => {
-        data['moderatorName'] ="Moderator Name"
-        data['moderatorEmail'] ="moderator@email.com"
+        data['moderatorName'] = "Moderator Name"
+        data['moderatorEmail'] = "moderator@email.com"
         Axios.get(`/moveArticleModeratorToAnalyst`, {params: {data}})
         .then(res => {
             setRefresh(!refresh)

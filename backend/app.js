@@ -148,7 +148,7 @@ app.get('/getRejectedArticles', (req, res) => {
 app.get('/removeArticle', (req, res) => {
     var data = JSON.parse(req.query.data)
     var collection = data.collection
-    var id = data.id
+    var id = data._id
     databaseRemove(res, collection, id)
 })
 
@@ -185,9 +185,10 @@ app.get('/insert', async (req, res) => {
                 publicationYear: Number(data.publicationYear),
                 volume: Number(data.volume),
                 number: Number(data.number),
+                pages: Number(data.pages),
                 journalName: data.journalName,
                 summary: data.summary,
-                practiceType: Number(data.practiceType),
+                practiceType: data.practiceType,
                 authors: data.authors,
             }
             break;
