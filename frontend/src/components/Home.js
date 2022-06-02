@@ -1,7 +1,9 @@
-import {React, useEffect, useState }  from 'react'
+import {React, useEffect, useState, useRef }  from 'react'
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { BiPlus } from 'react-icons/bi';
+import { Link } from 'react-router-dom';
+import { BiAlignRight, BiPlus } from 'react-icons/bi';
 import Axios from "axios";
 
 export default function Home() {
@@ -13,24 +15,42 @@ export default function Home() {
       navigate({
           pathname: path
       });
+  const [articlesOriginal, setArticlesOriginalData] = useState([]);
+  const myContainer = useRef(null);
+  var SearchBox;
 
   useEffect(() => {
     // Update the document title using the browser API
+    console.log("sfadad");
     articles();
-  });
+  }, []);
+
+  function searchArticles() {
+    SearchBox = myContainer.current.value;
+    setArticlesOriginalData(articleData);
+    // console.log(articleData.filter(x => x.journalName == SearchBox));
+    setArticleData(articleData.filter(x => x.journalName == SearchBox));
+  }
+
+  function resetArticles() {
+    setArticleData(articlesOriginal);
+  }
 
   // Getting Articles
 
 const articles = function () {
-  console.log("Function");
+  // console.log("Function");
   Axios.get("http://localhost:3000/getAllArticles")
       .then(response => {
                     setArticleData(response.data.results);
+                    // this.articlesOriginal = response.data.results;
+                    // console.log(this.articlesOriginal);
                     // console.log(articleData);
       })
   ;
 
 }
+
 
   return (
     <>
@@ -44,6 +64,17 @@ const articles = function () {
                 Add Article
               </Link>
             </li>
+            
+        <div class="input-group rounded" style={{ marginTop : "2%", marginLeft : "60%"}}>
+            <input type="search" ref={myContainer} id="SearchBox" 
+            class="form-control rounded" placeholder="Search" aria-label="Search" 
+            aria-describedby="search-addon" style={{ height : "30px", margin : "1%"}}/>
+            <span class="input-group-text border-0" id="search-addon">
+              <i class="fas fa-search"></i>
+            </span>
+            <button onClick={searchArticles}  style={{ height : "30px", margin : "1%"}}>Search</button>
+            <button onClick={resetArticles} style={{ height : "30px", margin : "1%"}}>Reset</button>
+        </div>
           </nav>
         </header>
 
@@ -60,7 +91,7 @@ const articles = function () {
               <th className="number">Number</th>
               <th className="pages">Pages</th>
               <th className="doi">DOI</th>
-              <th className="actions">Actions</th>
+              <th className="actions" style={{  margin : "100%"}}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -73,7 +104,7 @@ const articles = function () {
                                     <td> {x.number} </td>
                                     <td> {x.practiceType} </td>
                                     <td> {x.doi} </td>
-                                    <td> 
+                                    <td style={{  margin : "100%"}}> 
                                         <button style={{ color: "white", background: "green", border: "none" }}>Edit</button> 
                                         &nbsp;
                                         <button style={{ color: "white", background: "red", border: "none"  }}>DELETE</button> 
