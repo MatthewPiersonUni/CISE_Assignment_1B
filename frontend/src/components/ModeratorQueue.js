@@ -8,7 +8,7 @@ export default function ModeratorQueue() {
 
     const rejectArticle = (data) => {
         data['rejectName'] ="Moderator Name"
-        Axios.get(`http://localhost:3000/moveArticleModeratorToReject`, {params: {data}})
+        Axios.get(`/moveArticleModeratorToReject`, {params: {data}})
         .then(res => {
             setRefresh(!refresh)
         })
@@ -17,14 +17,14 @@ export default function ModeratorQueue() {
     const approveArticle = (data) => {
         data['moderatorName'] ="Moderator Name"
         data['moderatorEmail'] ="moderator@email.com"
-        Axios.get(`http://localhost:3000/moveArticleModeratorToAnalyst`, {params: {data}})
+        Axios.get(`/moveArticleModeratorToAnalyst`, {params: {data}})
         .then(res => {
             setRefresh(!refresh)
         })
     }
 
     useEffect(() => {    
-        Axios.get(`http://localhost:3000/getModerationQueue`)
+        Axios.get(`/getModerationQueue`)
         .then(res => {
             setModeratorQueue(res.data.results)
         })

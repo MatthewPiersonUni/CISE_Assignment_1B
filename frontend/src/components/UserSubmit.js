@@ -14,7 +14,7 @@ export default function UserSubmit() {
             submitterName: data[0],
             submitterEmail: data[1],
         }
-        Axios.get(`http://localhost:3000/insert`, {params: {data}})
+        Axios.get(`/insert`, {params: {data}})
         .then(res => {
             alert("Successfully added DOI to the moderation queue! Feel free to submit another article for moderation!")
             setRefresh(!refresh)
@@ -46,7 +46,7 @@ export default function UserSubmit() {
     }
 
     useEffect(() => {    
-        Axios.get(`http://localhost:3000/getRejectedArticles`)
+        Axios.get(`/getRejectedArticles`)
         .then(res => {
             setRejectedDOIs(res.data.results)
         })

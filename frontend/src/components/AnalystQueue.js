@@ -7,14 +7,14 @@ export default function AnalystQueue() {
     const [refresh, setRefresh] = useState(false);
 
     const rejectArticle = (data) => {
-        Axios.get(`http://localhost:3000/moveArticleAnalystToReject`, {params: {data}})
+        Axios.get(`/moveArticleAnalystToReject`, {params: {data}})
         .then(res => {
             setRefresh(!refresh)
         })
     }
 
     useEffect(() => {    
-        Axios.get(`http://localhost:3000/getAnalystQueue`)
+        Axios.get(`/getAnalystQueue`)
         .then(res => {
             setAnalystQueue(res.data.results)
         })

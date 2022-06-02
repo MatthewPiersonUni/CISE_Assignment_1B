@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom'
 import RejectArticles from './components/RejectedArticles';
 import AnalystQueue from './components/AnalystQueue';
 import ModeratorQueue from './components/ModeratorQueue';
