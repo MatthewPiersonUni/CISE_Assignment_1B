@@ -1,0 +1,45 @@
+.tableContent th tr td {
+    border-collapse: collapse;
+    font-size: 0.9em;
+    min-width: 500px;
+    margin: 0 auto;
+    overflow: hidden;
+
+    -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    height: 40px;
+    min-width: 12.5%;
+    align-items: center;
+    text-align: center;
+}
+
+.tableContent thead tr {
+    background-color: #3c3c3c;
+    color: #fff;
+    text-align: left;
+    font-weight: bold;
+}
+
+.tableContent thead tr th {
+    padding: 12px 15px;
+}
+
+.tableContent thead tr .name {
+    width: 200px;
+}
+
+.tableContent thead tr .doi {
+    width: 200px;
+}
+
+

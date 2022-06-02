@@ -3,6 +3,7 @@ import { createBrowserHistory } from 'history';
 import Axios from "axios";
 
 import React, { useReducer, useState, useEffect, useContext } from "react";
+import { useSearchParams, useNavigate} from "react-router-dom";
 import { GlobalContext } from '../context/GlobalState';
 
 import articleStyle from  '../styles/AddNewArticle.module.css';
@@ -16,6 +17,13 @@ export default function AddNewArticle() {
   const { addArticle } = useContext(GlobalContext);
   const articleHistory = createBrowserHistory();
   const [isArticleValid, setIsArticleValid] = useState(false); /* Used in onSubmit function */
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+    const navigateTo = (path) =>
+        navigate({
+            pathname: path
+        });
 
   // =====> ARTTILCE TITLE <=====
   const [articleTitle, dispatchArticleTitle] = useReducer (
@@ -124,7 +132,7 @@ export default function AddNewArticle() {
   const [articlePages, dispatchArticlePages] = useReducer (
     (state, action) => {
       if (action.type === "ARTICLE_INPUT") {
-        return {value: action.val, isValid: action.val.length > 5}
+        return {value: action.val, isValid: action.val.length > 0}
       }
 
       return { value: "", isValid: false }
@@ -155,6 +163,40 @@ export default function AddNewArticle() {
     dispatchArticleDOI({type: "ARTICLE_INPUT", val: e.target.value})
   }
 
+  // =====> ARTICLE SUMMARY <=====
+  const [articleSummary, dispatchArticleSummary] = useReducer (
+    (state, action) => {
+      if (action.type === "ARTICLE_SUMMARY") {
+        return {value: action.val, isValid: action.val.length > 0}
+      }
+
+      return {value: "", isValid: false}
+    },
+
+    {value: "", isValid: null}
+  )
+
+  const onArticleSummaryChange = function (e) {
+    dispatchArticleSummary({type: "ARTICLE_SUMMARY", val: e.target.value})
+  }
+
+  // =====> ARTICLE SOFTWARE ENGINEERING PRACTICE TYPE <=====
+  const [articleSEType, dispatchArticleSEType] = useReducer (
+    (state, action) => {
+      if (action.type === "ARTICLE_SETYPE") {
+        return {value: action.val, isValid: action.val.length > 0}
+      }
+
+      return {value: "", isValid: false}
+    },
+
+    {value: "", isValid: null}
+  )
+
+  const onArticleSETypeChange = function (e) {
+    dispatchArticleSEType({type: "ARTICLE_SETYPE", val: e.target.value})
+  }
+
   // =====> ARTICLE ISVALID <===== 
   const { isValid: articleTitleIsValid } = articleTitle;
   const { isValid: artcleVolumeIsValid } = articleAuthor;
@@ -163,6 +205,8 @@ export default function AddNewArticle() {
   const { isValid: articleVolumeIsValid } = articleVolume;
   const { isValid: articleNumberIsValid } = articleNumber;
   const { isValid: articlePagesIsValid } = articlePages;
+  const { isValid: articleSummaryIsValid } = articleSummary;
+  const { isValid: articleSETypeIsValid } = articleSEType;
   const { isValid: articleDOIIsValid } = articleDOI;
 
   // ===== USE EFFECT =====
@@ -176,6 +220,8 @@ export default function AddNewArticle() {
         articleVolumeIsValid &&
         articleNumberIsValid &&
         articlePagesIsValid &&
+        articleSummaryIsValid &&
+        articleSETypeIsValid &&
         articleDOIIsValid !== false
       );
     }, 1000)
@@ -185,12 +231,11 @@ export default function AddNewArticle() {
     };
   },  
     [articleTitleIsValid, artcleVolumeIsValid, articleNameIsValid, articleYearOfPublicationIsValid,
-    articleVolumeIsValid, articleNumberIsValid, articlePagesIsValid, articleDOIIsValid]
+    articleVolumeIsValid, articleNumberIsValid, articlePagesIsValid, articleDOIIsValid, articleSummaryIsValid, articleSETypeIsValid]
   );
 
   // ===== ON SUBMIT  =====
-  const onSubmit = function (e) {
-    e.preventDefault()
+  const onSubmit = () => {
 
     if (isArticleValid !== true) return 
 
@@ -202,42 +247,30 @@ export default function AddNewArticle() {
       articleVolume: articleVolume.value,
       articleNumber: articleNumber.value,
       articlePages: articlePages.value,
-      articleDOI: articleDOI.value,
+      articleSummary: articleSummary.value,
+      articleSEType: articleSEType.value,
+      articleDOI: searchParams.get("DOI") !== undefined ? searchParams.get("DOI") : articleDOI.value,
     };
 
-    Axios.post("/insert", { /* DON'T for get to implement insert method in the backend */
-      articleTitle: articleTitle.value,
-      articleAuthor: articleAuthor.value,
-      articleName: articleName.value,
-      articleYearOfPublication: articleYearOfPublication.value,
-      articleVolume: articleVolume.value,
-      articleNumber: articleNumber.value,
-      articlePages: articlePages.value,
-      articleDOI: articleDOI.value,
-    });
+    var data = { 
+      title: articleTitle.value,
+      authors: articleAuthor.value,
+      journalName: articleName.value,
+      publicationYear: articleYearOfPublication.value,
+      volume: articleVolume.value,
+      number: articleNumber.value,
+      pages: articlePages.value,
+      summary: articleSummary.value,
+      practiceType: articleSEType.value,
+      doi: searchParams.get("DOI") !== undefined ? searchParams.get("DOI") : articleDOI.value,
+      collection: "SPEED",
+    }
+
+    Axios.get("/insert", {params : {data}});
 
     addArticle(newArticle);
     articleHistory.push("/");
   };
-
-    // ===== ARTICLE FORM =====
-    const ArticleFormField = (props) => {
-      return (
-        <>
-          <div className={formStyle.form_control}>
-            <label>{props.label}</label>
-            <input 
-              type={props.type}
-              value={props.value}
-              placeholder={props.placeholder}
-              onChange={props.onChange}
-              name={props.name}
-              className={props.className}
-            />
-          </div>
-        </>
-      )
-    };
 
     // =====> BUTTON <=====
     const Button = (props) => {
@@ -250,91 +283,131 @@ export default function AddNewArticle() {
   
   return (
     <>
-
+        <button style={{width:"200px", height:"50px"}} onClick={() => navigateTo("/")}>Home</button>
         <form onSubmit={onSubmit} className={`${articleStyle.form}`} >
 
           {/* TITLE */}
-          <ArticleFormField 
-            type="text"
-            value={articleTitle.value}
-            placeholder="Enter article title"
-            onChange={onArticleTitleChange}
-            label="Title"
-            className={`${articleTitle.isValid === false ?  articleStyle.invalid : ``}`}
-          />
+          <div className={formStyle.form_control}>
+            <label>Title</label>
+            <input 
+              type="text"
+              value={articleTitle.value}
+              placeholder="Enter article title"
+              onChange={onArticleTitleChange}
+              className={`${articleTitle.isValid === false ?  articleStyle.invalid : ``}`}
+            />
+          </div>
 
           {/*  AUTHOR */}
-          <ArticleFormField 
-            type="text"
-            value={articleAuthor.value}
-            placeholder="Enter article Author"
-            onChange={onArticleAuthorChange}
-            label="Author"
-            className={`${articleAuthor.isValid === false ?  articleStyle.invalid : ``}`} 
-          />
+          <div className={formStyle.form_control}>
+            <label>Author</label>
+            <input 
+              type="text"
+              value={articleAuthor.value}
+              placeholder="Enter article Author"
+              onChange={onArticleAuthorChange}
+              className={`${articleAuthor.isValid === false ?  articleStyle.invalid : ``}`} 
+            />
+          </div>
           
           {/* NAME */}
-          <ArticleFormField 
-            type="text"
-            value={articleName.value}
-            placeholder="Enter article Name"
-            onChange={onArticleNameChange}
-            label="Name"
-            className={`${articleName.isValid === false ?  articleStyle.invalid : ``}`} 
-          />
-
+          <div className={formStyle.form_control}>
+            <label>Name</label>
+            <input 
+              type="text"
+              value={articleName.value}
+              placeholder="Enter article Name"
+              onChange={onArticleNameChange}
+              label="Name"
+              className={`${articleName.isValid === false ?  articleStyle.invalid : ``}`}  
+            />
+          </div>
 
           {/* YEAR of PUBLICATION */}
-          <ArticleFormField 
-            type="text"
-            value={articleYearOfPublication.value}
-            placeholder="Enter article Year of Publication"
-            onChange={onArticleYearOfPublicationChange}
-            label="Year of Publication"
-            className={`${articleYearOfPublication.isValid === false ?  articleStyle.invalid : ``}`} 
-          />
-
+          <div className={formStyle.form_control}>
+            <label>Year of Publication</label>
+            <input 
+              type="text"
+              value={articleYearOfPublication.value}
+              placeholder="Enter article Year of Publication"
+              onChange={onArticleYearOfPublicationChange}
+              className={`${articleYearOfPublication.isValid === false ?  articleStyle.invalid : ``}`}   
+            />
+          </div>
 
           {/* VOLUME */}
-          <ArticleFormField 
-            type="text"
-            value={articleVolume.value}
-            placeholder="Enter article Volume"
-            onChange={onArticleVolumeChange}
-            label="Volume"
-            className={`${articleVolume.isValid === false ?  articleStyle.invalid : ``}`} 
-          />
+          <div className={formStyle.form_control}>
+            <label>Volume</label>
+            <input 
+              type="text"
+              value={articleVolume.value}
+              placeholder="Enter article Volume"
+              onChange={onArticleVolumeChange}
+              className={`${articleVolume.isValid === false ?  articleStyle.invalid : ``}`}    
+            />
+          </div>
 
           {/* NUMBER */}
-          <ArticleFormField 
-            type="text"
-            value={articleNumber.value}
-            placeholder="Enter Article Number"
-            onChange={onArticleNumbereChange}
-            label="Number"
-            className={`${articleNumber.isValid === false ?  articleStyle.invalid : ``}`} 
-          />
+          <div className={formStyle.form_control}>
+            <label>Number</label>
+            <input 
+              type="text"
+              value={articleNumber.value}
+              placeholder="Enter Article Number"
+              onChange={onArticleNumbereChange}
+              className={`${articleNumber.isValid === false ?  articleStyle.invalid : ``}`}    
+            />
+          </div>
 
           {/* PAGES */}
-          <ArticleFormField 
-            type="text"
-            value={articlePages.value}
-            placeholder="Enter article Pages"
-            onChange={onArticlePagesChange}
-            label="Pages"
-            className={`${articlePages.isValid === false ?  articleStyle.invalid : ``}`} 
-          />
+          <div className={formStyle.form_control}>
+            <label>Pages</label>
+            <input 
+              type="text"
+              value={articlePages.value}
+              placeholder="Enter article Pages"
+              onChange={onArticlePagesChange}
+              className={`${articlePages.isValid === false ?  articleStyle.invalid : ``}`}     
+            />
+          </div>
 
+          {/* SUMMARY */}
+          <div className={formStyle.form_control}>
+            <label>Summary</label>
+            <input 
+              type="text"
+              value={articleSummary.value}
+              placeholder="Enter article Summary"
+              onChange={onArticleSummaryChange}
+              className={`${articleSummary.isValid === false ?  articleStyle.invalid : ``}`}      
+            />
+          </div>
+
+          {/* SETYPE */}
+          <div className={formStyle.form_control}>
+            <label>Software Engineering Practice Type</label>
+            <input 
+              type="text"
+              value={articleSEType.value}
+              placeholder="Enter article Software Engineering Practice Type"
+              onChange={onArticleSETypeChange}
+              label="Software Engineering Practice Type"
+              className={`${articleSEType.isValid === false ?  articleStyle.invalid : ``}`}      
+            />
+          </div>
 
           {/* DOI */}
-          <ArticleFormField 
-            type="text"
-            value={articleDOI.value}
-            placeholder="Enter article DOI"
-            onChange={onArticleDOIChange}
-            label="DOI"
-            className={`${articleDOI.isValid === false ?  articleStyle.invalid : ``}`} 
-          />
+          <div className={formStyle.form_control}>
+            <label>DOI</label>
+            <input 
+              type="text"
+              value={searchParams.get("DOI") !== undefined ? searchParams.get("DOI") : articleDOI.value}
+              placeholder="Enter article DOI"
+              onChange={onArticleDOIChange}
+              className={`${articleDOI.isValid === false ?  articleStyle.invalid : ``}`}
+              readOnly={searchParams.get("DOI") !== undefined ? true : false}      
+            />
+          </div>
 
           <div className={articleStyle.buttons}>
             <Button type='submit' className={`${isArticleValid ? articleStyle.submit : articleStyle.disabled}`}>
