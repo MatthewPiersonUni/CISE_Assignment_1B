@@ -1,13 +1,19 @@
 import {React, useEffect, useState }  from 'react'
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BiPlus } from 'react-icons/bi';
 import Axios from "axios";
 
 export default function Home() {
 
   const [articleData, setArticleData] = useState([]);
-  
+  const navigate = useNavigate();
+
+  const navigateTo = (path) =>
+      navigate({
+          pathname: path
+      });
+
   useEffect(() => {
     // Update the document title using the browser API
     articles();
@@ -28,6 +34,7 @@ const articles = function () {
 
   return (
     <>
+      <button style={{width:"200px", height:"50px"}} onClick={() => navigateTo("/")}>Home</button>
       <HomeStyle>
         <header className="headerWrapper">
           <nav>

@@ -9,13 +9,15 @@ import RejectArticles from './components/RejectedArticles';
 import Home from "./components/Home";
 import AddNewArticle from "./components/AddNewArticle";
 import EditArticle from "./components/EditArticle";
+import LandingPage from './components/LandingPage';
 
 function App() {
   return (
     <>
       <div className="appWrapper">
         <Routes>
-          <Route exact path="/" element={< Home />}/>
+          <Route exact path="/" element={< LandingPage />}/>
+          <Route path="/search" element={< Home />}/>
           <Route path="/add" element={< AddNewArticle />} />
           <Route path="/edit" element={< EditArticle />} />
           <Route path="/moderator" element={< ModeratorQueue />} />

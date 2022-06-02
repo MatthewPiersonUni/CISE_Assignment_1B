@@ -3,7 +3,7 @@ import { createBrowserHistory } from 'history';
 import Axios from "axios";
 
 import React, { useReducer, useState, useEffect, useContext } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate} from "react-router-dom";
 import { GlobalContext } from '../context/GlobalState';
 
 import articleStyle from  '../styles/AddNewArticle.module.css';
@@ -18,6 +18,12 @@ export default function AddNewArticle() {
   const articleHistory = createBrowserHistory();
   const [isArticleValid, setIsArticleValid] = useState(false); /* Used in onSubmit function */
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+    const navigateTo = (path) =>
+        navigate({
+            pathname: path
+        });
 
   // =====> ARTTILCE TITLE <=====
   const [articleTitle, dispatchArticleTitle] = useReducer (
@@ -277,7 +283,7 @@ export default function AddNewArticle() {
   
   return (
     <>
-
+        <button style={{width:"200px", height:"50px"}} onClick={() => navigateTo("/")}>Home</button>
         <form onSubmit={onSubmit} className={`${articleStyle.form}`} >
 
           {/* TITLE */}
