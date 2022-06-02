@@ -35,7 +35,7 @@ export default function Search() {
   // Getting Articles
 
 const articles = function () {
-  Axios.get("http://localhost:3000/getAllArticles")
+  Axios.get("/getAllArticles")
       .then(response => {
           setArticleData(response.data.results);
       })
